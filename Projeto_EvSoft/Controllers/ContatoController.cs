@@ -26,13 +26,59 @@ namespace Projeto_EvSoft.Controllers
 
             _context.Contatos.Add(contato);
             _context.SaveChanges();
-            return Created("localhost:5271/Contato/" + contato.ContatoId, contato);
+            return CreatedAtAction(nameof(GetOne), new {Id = contato.ContatoId}, contato);
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
             return Ok(_context.Contatos);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetOne(int id)
+        {
+            Contato contato = _context.Contatos.Find(id);
+
+            if(contato == null)
+                return NotFound();
+
+            ReadContatoDto contatoDto = _mapper.Map<ReadContatoDto>(contato);
+
+            return Ok(contato);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] UpdateContatoDto contatoDto)
+        {
+            Contato? contato = _context.Contatos.Find(id);
+
+            if (contato == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(contatoDto, contato);
+            _context.Contatos.Update(contato);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            Contato contato = _context.Contatos.Find(id);
+
+            if (contato == null)
+            {
+                return NotFound();
+            }
+
+            _context.Contatos.Remove(contato);
+            _context.SaveChanges();
+
+            return NoContent();
         }
     }
 }

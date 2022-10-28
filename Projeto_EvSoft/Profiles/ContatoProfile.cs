@@ -9,6 +9,8 @@ namespace Projeto_EvSoft.Profiles
         public ContatoProfile()
         {
             CreateMap<CreateContatoDto, Contato>();
+            CreateMap<Contato, ReadContatoDto>();
+            CreateMap<UpdateContatoDto, Contato>();
         }
     }
 }
